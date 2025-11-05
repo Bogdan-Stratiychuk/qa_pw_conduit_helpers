@@ -27,4 +27,3 @@ export async function createNewArticle(page, article, expectedError) {
     await viewArticlePage.assertArticleTextIsVisible(article.text);
   });
 }
-

@@ -31,21 +31,22 @@ export class EditArticlePage {
     });
   }
 
-  async addTagsField(tags) {
-    await test.step(`Add the 'Tags' field`, async () => {
-      await this.tagsField.fill(tags);
+  async addTagsField(tag) {
+    await test.step(`Add a tag '${tag}'`, async () => {
+      await this.tagsField.fill(tag);
       await this.page.keyboard.press('Enter');
     });
   }
 
-  async removeTagsField(tags) {
-    await test.step(`Remove the 'Tags' field`, async () => {
-      await this.page.getByText(tags).click();
+  async removeTagsField(tag) {
+    await test.step(`Remove the tag '${tag}'`, async () => {
+      const tagElement = this.page.locator(`.tag-list .tag-default:has-text("${tag}")`);
+      await tagElement.locator('i').click(); // <i class="ion-close-round"></i>
     });
   }
 
   async clickUpdateArticleButton() {
-    await test.step(`Click the 'Publish Article' button`, async () => {
+    await test.step(`Click the 'Update Article' button`, async () => {
       await this.publishArticleButton.click();
     });
   }
@@ -56,4 +57,3 @@ export class EditArticlePage {
     });
   }
 }
-

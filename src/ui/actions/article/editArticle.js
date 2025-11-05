@@ -17,7 +17,7 @@ export async function editArticleTitle(page, editedArticle) {
     await page.goto(`/article/${slug}`);
 
     await viewArticlePage.assertArticleTitleIsVisible(editedArticle.title);
-  })
+  });
 }
 
 export async function editArticleDescription(page, article, editedArticle) {
@@ -31,8 +31,8 @@ export async function editArticleDescription(page, article, editedArticle) {
     const slug = page.url().split('/').pop();
     await page.goto(`/article/${slug}`);
 
-    await viewArticlePage.assertArticleTitleIsVisible(article.title);
-  })
+    await viewArticlePage.assertArticleDescriptionIsNotVisible(editedArticle.description);
+  });
 }
 
 export async function editArticleText(page, editedArticle) {
@@ -47,7 +47,7 @@ export async function editArticleText(page, editedArticle) {
     await page.goto(`/article/${slug}`);
 
     await viewArticlePage.assertArticleTextIsVisible(editedArticle.text);
-  })
+  });
 }
 
 export async function editArticleTags(page, editedArticle) {
@@ -61,8 +61,8 @@ export async function editArticleTags(page, editedArticle) {
     const slug = page.url().split('/').pop();
     await page.goto(`/article/${slug}`);
 
-    await viewArticlePage.assertArticleTagIsVisible(editedArticle.tags[0])
-  })
+    await viewArticlePage.assertArticleTagIsVisible(editedArticle.tags[0]);
+  });
 }
 
 export async function removeArticleTitle(page) {
@@ -73,7 +73,7 @@ export async function removeArticleTitle(page) {
     await editArticlePage.clickUpdateArticleButton();
 
     await editArticlePage.assertErrorMessageContainsText(TITLE_CANNOT_BE_EMPTY);
-  })
+  });
 }
 
 export async function removeArticleDescription(page) {
@@ -84,7 +84,7 @@ export async function removeArticleDescription(page) {
     await editArticlePage.clickUpdateArticleButton();
 
     await editArticlePage.assertErrorMessageContainsText(DESCTIPTION_CANNOT_BE_EMPTY);
-  })
+  });
 }
 
 export async function removeArticleText(page) {
@@ -95,17 +95,23 @@ export async function removeArticleText(page) {
     await editArticlePage.clickUpdateArticleButton();
 
     await editArticlePage.assertErrorMessageContainsText(TEXT_CANNOT_BE_EMPTY);
-  })
+  });
 }
 
 export async function removeArticleTags(page, article) {
-  await test.step(`Remove the article's text`, async () => {
+  await test.step(`Remove the article's tag`, async () => {
     const viewArticlePage = new ViewArticlePage(page);
     const editArticlePage = new EditArticlePage(page);
 
-    await editArticlePage.removeTagsField(article.tags[0])
+    const tagToRemove = article.tags[0];
+
+    await editArticlePage.removeTagsField(tagToRemove);
     await editArticlePage.clickUpdateArticleButton();
 
-    await viewArticlePage.assertArticleTitleIsVisible(article.title);
-  })
+    const slug = page.url().split('/').pop();
+    await page.goto(`/article/${slug}`);
+
+    await viewArticlePage.assertTagIsNotVisible(tagToRemove);
+  });
 }
+
